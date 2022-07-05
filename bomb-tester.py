@@ -1,0 +1,2 @@
+import qiskit
+qiskit.__qiskit_version__
