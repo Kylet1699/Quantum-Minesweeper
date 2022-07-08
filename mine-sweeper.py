@@ -1,5 +1,6 @@
 import math
 import random
+from bomb_tester import *
 
 GRID_SIZE = 6
 
@@ -9,13 +10,17 @@ bomb_grid = [[0 for x in range(GRID_SIZE)] for y in range(GRID_SIZE)]
 
 # Initialize the grid with bombs
 def initialize():
-    i = GRID_SIZE ** 2 / 4 # Modify this to change number of bombs on the grid
-    while i > 0:
-        x = random.randint(0, GRID_SIZE - 1)
-        y = random.randint(0, GRID_SIZE - 1)
-        if bomb_grid[x][y] == 0:
-            bomb_grid[x][y] = 1
-            i -= 1
+    # i = GRID_SIZE ** 2 / 4 # Modify this to change number of bombs on the grid
+    # while i > 0:
+    #     x = random.randint(0, GRID_SIZE - 1)
+    #     y = random.randint(0, GRID_SIZE - 1)
+    #     if bomb_grid[x][y] == 0:
+    #         bomb_grid[x][y] = 1
+    #         i -= 1
+
+    for x in range(GRID_SIZE) :
+        for y in range(GRID_SIZE):
+            bomb_grid[x][y] = get_count(6)
 
 
 # Draw the user view of the game state
@@ -24,7 +29,7 @@ def draw():
     # Draw the top border
     print('\t┌', end='')
     for i in range(0, GRID_SIZE):
-        print('─' * 3, end='')
+        print('─' * 11, end='')
         if i != GRID_SIZE - 1:
             print('┬', end='')
     print('┐', sep='')
@@ -33,7 +38,7 @@ def draw():
         if i != 0:
             print('\t├', end='')
             for k in range(0, GRID_SIZE):
-                print('─' * 3, end='')
+                print('─' * 11, end='')
                 if k != GRID_SIZE - 1:
                     print('┼', end='')
             print('┤', sep='')
@@ -41,18 +46,18 @@ def draw():
         for j in range(0, GRID_SIZE):
             if j == 0:
                 print('\t│', end='')
-            if grid[i][j] == 1:
-                print(' ⚑ ', end='│')
-            elif grid[i][j] == 0:
-                print(' * ', end='│')
+            # if grid[i][j] == 1:
+            #     print(' ⚑ ', end='│')
+            # elif grid[i][j] == 0:
+            #     print(' * ', end='│')
             else:
-                print('   ', end='│')
+                print(bomb_grid[i][j], end='│')
             if j == GRID_SIZE - 1:
-                print()
+                print(bomb_grid[i][j])
     # Draw the bottom border
     print('\t└', end='')
     for i in range(0, GRID_SIZE):
-        print('─' * 3, end='')
+        print('─' * 11, end='')
         if i != GRID_SIZE - 1:
             print('┴', end='')
     print('┘', sep='')
@@ -77,7 +82,6 @@ def play():
             x, y = map(int , input('Select a block to test (x y): ').split())
             if x >= GRID_SIZE or x < 0 or y >= GRID_SIZE or y < 0:
                 raise Exception()
-
             # Prompt user to choose action
             selection = input('Select an option (C = check, F = flag): ')
             option = -1
@@ -97,7 +101,9 @@ def play():
                 break
         except:
             print('Invalid input.')
+            break
 
 initialize()
 draw()
 play()
+
