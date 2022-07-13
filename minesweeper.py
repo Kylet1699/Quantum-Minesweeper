@@ -1,12 +1,11 @@
 import math
 import random
-from bomb_tester import *
+from BombTester import *
 
 GRID_SIZE = 6
 
 grid = [[-1 for x in range(GRID_SIZE)] for y in range(GRID_SIZE)]
 bomb_grid = [[0 for x in range(GRID_SIZE)] for y in range(GRID_SIZE)]
-
 
 # Initialize the grid with bombs
 def initialize():
@@ -17,14 +16,13 @@ def initialize():
     #     if bomb_grid[x][y] == 0:
     #         bomb_grid[x][y] = 1
     #         i -= 1
-
-    for x in range(GRID_SIZE) :
+    for x in range(GRID_SIZE):
         for y in range(GRID_SIZE):
             bomb_grid[x][y] = get_count(6)
 
 
 # Draw the user view of the game state
-def draw():
+def draw(hidden):
     print('\n')
     # Draw the top border
     print('\t┌', end='')
@@ -50,10 +48,15 @@ def draw():
             #     print(' ⚑ ', end='│')
             # elif grid[i][j] == 0:
             #     print(' * ', end='│')
-            else:
+            elif (hidden == False):
                 print(bomb_grid[i][j], end='│')
-            if j == GRID_SIZE - 1:
-                print(bomb_grid[i][j])
+            elif (hidden == True):
+                print('           ', end='│')
+            if (j == GRID_SIZE - 1 ):
+                if (hidden == False):
+                    print(bomb_grid[i][j])
+                if (hidden == True):
+                    print('           ')
     # Draw the bottom border
     print('\t└', end='')
     for i in range(0, GRID_SIZE):
@@ -104,6 +107,7 @@ def play():
             break
 
 initialize()
-draw()
+draw(False)
+draw(True)
 play()
 
