@@ -4,7 +4,20 @@ import numpy as np
 
 def main():
     # Takes in input from user
-    size = int(input('Please enter a size: '))
+    size = 4
+    try:
+        difficulty = input('Select difficulty (E = easy, M = medium, H = hard): ')
+        if difficulty in ['e', 'E']:
+            size = 4
+        elif difficulty in ['m', 'M']:
+            size = 6
+        elif difficulty in ['h', 'H']:
+            size = 8
+        else:
+            raise 
+    except:
+        print('Invalid input, defaulting to easy')
+    
     # Initialize the board and make a copy of it, solution board and play board
     revealed = initialize(size)
     grid = np.copy(revealed)
@@ -46,6 +59,7 @@ def clear_neighbours(x, y, size, grid, solution):
         for j in range(y - 1, y + 2):
             if (i >= 0 and j >= 0 and i < size and j < size and
                 get_neighbours(i, j, size, solution) == 0 and
+                # If the block has no dectected bombs, clear it and check the surrounding blocks
                 grid[i][j] in ['*', '-']):
                 grid[i][j] = 0
                 clear_neighbours(i, j, size, grid, solution)
@@ -71,6 +85,7 @@ def play(grid, solution, size):
             if solution[x][y][0] == selection:
                 print('Congratz, you predicted correctly')
                 grid[x][y] = get_neighbours(x, y, size, solution)
+                solution[x][y] = '0000000'
                 clear_neighbours(x, y, size, grid, solution)
             else:
                 print('You lose')
