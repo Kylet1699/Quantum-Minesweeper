@@ -29,17 +29,27 @@ def initialize(grid_size):
             bomb_grid[x][y] = bt.get_count(6)[0] # Returns a string of qubits
     return bomb_grid
 
-# Count the number of neighbouring bombs (predicted)
-def get_neighbours(x, y, size, grid):
+# Count the number of neighbouring bombs (detector qubit)
+def get_neighbours(x, y, size, solution):
     count = 0
     for i in range(x - 1, x + 2):
         for j in range(y - 1, y + 2):
             if (i >= 0 and j >= 0 and i < size and j < size
-                and grid[i][j][0] == '1' and not (x == i and y == j)):
+                and solution[i][j][1] == '1' and not (x == i and y == j)):
                 count += 1
 
     return count
 
+# Clear all neighbouring blocks recursively that do not touch a bomb (detector qubit)
+def clear_neighbours(x, y, size, grid, solution):        
+    for i in range(x - 1, x + 2):
+        for j in range(y - 1, y + 2):
+            if (i >= 0 and j >= 0 and i < size and j < size and
+                get_neighbours(i, j, size, solution) == 0 and
+                grid[i][j] in ['*', '-']):
+                grid[i][j] = 0
+                clear_neighbours(i, j, size, grid, solution)
+                
 # Game logic
 def play(grid, solution, size):
     while True:
@@ -61,6 +71,7 @@ def play(grid, solution, size):
             if solution[x][y][0] == selection:
                 print('Congratz, you predicted correctly')
                 grid[x][y] = get_neighbours(x, y, size, solution)
+                clear_neighbours(x, y, size, grid, solution)
             else:
                 print('You lose')
                 break
