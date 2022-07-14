@@ -63,6 +63,13 @@ def clear_neighbours(x, y, size, grid, solution):
                 grid[i][j] in ['*', '-']):
                 grid[i][j] = 0
                 clear_neighbours(i, j, size, grid, solution)
+
+# Update the neighbouring bomb count for all cleared tiles
+def update_grid(size, grid, solution):
+    for i in range(0, size):
+        for j in range(0, size):
+            if grid[i][j] not in ['-', '*']:
+                grid[i][j] = get_neighbours(i, j, size, solution)
                 
 # Game logic
 def play(grid, solution, size):
@@ -84,9 +91,10 @@ def play(grid, solution, size):
             # Continue the game if user picks right, otherwise exit
             if solution[x][y][0] == selection:
                 print('Congratz, you predicted correctly')
-                grid[x][y] = get_neighbours(x, y, size, solution)
+                grid[x][y] = 0
                 solution[x][y] = '0000000'
                 clear_neighbours(x, y, size, grid, solution)
+                update_grid(size, grid, solution)
             else:
                 print('You lose')
                 break
