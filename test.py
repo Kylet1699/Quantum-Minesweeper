@@ -1,28 +1,42 @@
 import tkinter as tk
 
-SIZE = [4]
-
 # print which button is clicked
 def btn_click(i):
     print(f"clicked {i}")
 
-# set size of grid according to the chosen difficulty option
-def set_difficulty(diffOption):
-    SIZE[0] = diffOption
+def difficulty_easy():
+    hide_all_frames()
+    difficulty_easy_frame.pack(fill="both", expand=1)
+    draw(4)
 
-    print(SIZE[0])
+def difficulty_medium():
+    hide_all_frames()
+    difficulty_medium_frame.pack(fill="both", expand=1)
+    draw(6)
 
+def difficulty_hard():
+    hide_all_frames()
+    difficulty_hard_frame.pack(fill="both", expand=1)
+    draw(8)
 
 def draw(grid):
-    btn_frame = tk.Frame(window)
-    btn_frame.pack()
-    
+    if grid == 4:
+        difficulty_frame = difficulty_easy_frame
+    elif grid == 6:
+        difficulty_frame = difficulty_medium_frame
+    elif grid == 8:
+        difficulty_frame = difficulty_hard_frame
+
     for row in range(grid):
         for col in range(grid):
             i = (row,col)
-            b = tk.Button(btn_frame, image=grid_img, command=lambda x=i: btn_click(x))
+            b = tk.Button(difficulty_frame, image=grid_img, command=lambda x=i: btn_click(x))
             b.grid(row=row + 1, column=col)
 
+def hide_all_frames():
+    difficulty_easy_frame.pack_forget()
+    difficulty_medium_frame.pack_forget()
+    difficulty_hard_frame.pack_forget()
 
 
 window = tk.Tk()
@@ -33,11 +47,15 @@ menubar = tk.Menu(window)
 window.config(menu=menubar)
 
 difficulty_menu = tk.Menu(menubar)
-difficulty_menu.add_command(label='Easy', command=lambda diffOption=4: set_difficulty(diffOption))
-difficulty_menu.add_command(label='Medium', command=lambda diffOption=6: set_difficulty(diffOption))
-difficulty_menu.add_command(label='Hard', command=lambda diffOption=8: set_difficulty(diffOption))
+menubar.add_cascade(label="Choose Difficulty", menu=difficulty_menu)
+difficulty_menu.add_command(label='Easy', command=difficulty_easy)
+difficulty_menu.add_command(label='Medium', command=difficulty_medium)
+difficulty_menu.add_command(label='Hard', command=difficulty_hard)
 
-menubar.add_cascade(label="Choose Difficulty", menu=difficulty_menu, underline=0)
+#Create some frames
+difficulty_easy_frame = tk.Frame(window, width=600, height=600, bg="red")
+difficulty_medium_frame = tk.Frame(window, width=600, height=600, bg="blue")
+difficulty_hard_frame = tk.Frame(window, width=600, height=600, bg="black")
 
 grid_img = tk.PhotoImage(file = "images/Grid.png")
 
