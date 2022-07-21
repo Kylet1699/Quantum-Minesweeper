@@ -4,11 +4,14 @@ import tkinter as tk
 def btn_click(i,difficulty_frame):
     print(f"clicked {i}")
     (row,col) = i
-    if is_bomb(row,col):
-        b = tk.Button(difficulty_frame,image=bomb_img, command=lambda x=i: btn_click(x))
-        b.grid(row=row + 1, column=col)
-    else:
-        b = tk.Button(difficulty_frame,image=no_bomb_img, command=lambda x=i: btn_click(x))
+    # if is_bomb(row,col):
+    #     bomb_prediction(row,col,difficulty_frame)
+    #     b = tk.Button(difficulty_frame,image=bomb_img, command=lambda x=i: btn_click(x))
+    #     b.grid(row=row + 1, column=col)
+    # else:
+    #     b = tk.Button(difficulty_frame,image=no_bomb_img, command=lambda x=i: btn_click(x))
+    #     b.grid(row=row + 1, column=col)
+    bomb_prediction(row,col,difficulty_frame)
 
 
 def difficulty_easy():
@@ -52,6 +55,21 @@ def is_bomb(x,y):
         return True
     else:
         return False
+
+def bomb_prediction(row,col, difficulty_frame):
+    i = (row,col)
+    if is_bomb(row,col):
+        bomb_tester_predict_label = tk.Label(difficulty_frame, text="Bomb tester says there is a bomb.")
+        bomb_tester_predict_label.grid(column=10, row=1, padx=5, pady=5)
+        b = tk.Button(difficulty_frame,image=bomb_img, command=lambda x=i: btn_click(x))
+        b.grid(row=row + 1, column=col)
+    else:
+        bomb_tester_predict_label = tk.Label(difficulty_frame, text="Bomb tester says there is no bomb.")
+        bomb_tester_predict_label.grid(column=10, row=1, padx=5, pady=5)
+        b = tk.Button(difficulty_frame,image=no_bomb_img, command=lambda x=i: btn_click(x))
+        b.grid(row=row + 1, column=col)
+    
+
 
 window = tk.Tk()
 window.title("Quantun Minesweeper")
