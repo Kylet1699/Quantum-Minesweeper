@@ -4,13 +4,6 @@ import tkinter as tk
 def btn_click(i,difficulty_frame):
     print(f"clicked {i}")
     (row,col) = i
-    # if is_bomb(row,col):
-    #     bomb_prediction(row,col,difficulty_frame)
-    #     b = tk.Button(difficulty_frame,image=bomb_img, command=lambda x=i: btn_click(x))
-    #     b.grid(row=row + 1, column=col)
-    # else:
-    #     b = tk.Button(difficulty_frame,image=no_bomb_img, command=lambda x=i: btn_click(x))
-    #     b.grid(row=row + 1, column=col)
     bomb_prediction(row,col,difficulty_frame)
 
 
