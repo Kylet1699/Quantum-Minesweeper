@@ -1,10 +1,17 @@
 import tkinter as tk
+import QuantumMinesweeper as qms
+import TextUI as tui
+
+def plant_bomb(size):
+    seed = qms.initialize(size)
+    tui.draw(seed) 
+    return seed
 
 # print which button is clicked
-def btn_click(i,difficulty_frame):
+def btn_click(i,difficulty_frame, bomb_loc):
     print(f"clicked {i}")
     (row,col) = i
-    if is_bomb(row,col):
+    if is_bomb(row, col, bomb_loc):
         b = tk.Button(difficulty_frame,image=bomb_img, command=lambda x=i: btn_click(x))
         b.grid(row=row + 1, column=col)
     else:
@@ -31,10 +38,20 @@ def difficulty_hard():
 
 # Draw grid
 def draw(grid,difficulty_frame):
+    seed = plant_bomb(grid)
+    bomb_loc = []
+    for i in range(len(seed)):
+        for j in range(len(seed)):
+            print(seed[i][j][0])
+            if seed[i][j][0] == '1':
+                this_bomb = (i, j)
+                bomb_loc.append(this_bomb)
+
+    print(bomb_loc)
     for row in range(grid):
         for col in range(grid):
             i = (row,col)
-            b = tk.Button(difficulty_frame, image=grid_img, command=lambda x=i: btn_click(x,difficulty_frame))
+            b = tk.Button(difficulty_frame, image=grid_img, command=lambda x=i: btn_click(x, difficulty_frame, bomb_loc))
             b.grid(row=row + 1, column=col)
 
 
@@ -45,9 +62,8 @@ def hide_all_frames():
 
 
 # check if location of the button clicked is a bomb
-def is_bomb(x,y):
-    bomb_loc = [(0,0), (1,0), (2,1)]    # Test with bomb locations
-
+def is_bomb(x, y, bomb_loc):
+    bomb_loc = bomb_loc
     if (x,y) in bomb_loc:
         return True
     else:
