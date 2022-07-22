@@ -75,14 +75,28 @@ def bomb_prediction(row,col, difficulty_frame, bomb):
     if bomb:
         bomb_tester_predict_label = tk.Label(difficulty_frame, text="Bomb tester says there is a bomb.")
         bomb_tester_predict_label.grid(column=10, row=1, padx=5, pady=5)
+        bomb_tester_predict_label.config(font=(12))
+        user_prediction(row,col, difficulty_frame)
         b = tk.Button(difficulty_frame,image=bomb_img, command=lambda x=i: btn_click(x))
         b.grid(row=row + 1, column=col)
     else:
         bomb_tester_predict_label = tk.Label(difficulty_frame, text="Bomb tester says there is no bomb.")
         bomb_tester_predict_label.grid(column=10, row=1, padx=5, pady=5)
+        bomb_tester_predict_label.config(font=(12))
+        user_prediction(row,col, difficulty_frame)
         b = tk.Button(difficulty_frame,image=no_bomb_img, command=lambda x=i: btn_click(x))
         b.grid(row=row + 1, column=col)
     
+def user_prediction(row, col, difficulty_frame):
+    user_prediction_label = tk.Label(difficulty_frame, text="Guess if there is actually a bomb: ")
+    user_prediction_label.grid(column=10, row=2, padx=5, pady=5)
+    user_prediction_label.config(font=(12))
+    yes_button = tk.Button(difficulty_frame, text="Yes")
+    yes_button.grid(column=11, row=2, padx=5, pady=5)
+    yes_button.config(font=(12))
+    no_button = tk.Button(difficulty_frame, text="No")
+    no_button.grid(column=12, row=2, padx=5, pady=5)
+    no_button.config(font=(12))
 
 
 window = tk.Tk()
@@ -99,13 +113,14 @@ difficulty_menu.add_command(label='Medium', command=difficulty_medium)
 difficulty_menu.add_command(label='Hard', command=difficulty_hard)
 
 #Create some frames
-difficulty_easy_frame = tk.Frame(window, width=600, height=600, bg="red")
-difficulty_medium_frame = tk.Frame(window, width=600, height=600, bg="blue")
-difficulty_hard_frame = tk.Frame(window, width=600, height=600, bg="black")
+difficulty_easy_frame = tk.Frame(window, width=600, height=600)
+difficulty_medium_frame = tk.Frame(window, width=600, height=600)
+difficulty_hard_frame = tk.Frame(window, width=600, height=600)
 
 grid_img = tk.PhotoImage(file = "images/Grid.png")
 bomb_img = tk.PhotoImage(file = "images/mineClicked.png")
 no_bomb_img = tk.PhotoImage(file = "images/empty.png")
+
 
         
 window.mainloop()
