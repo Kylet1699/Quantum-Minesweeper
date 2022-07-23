@@ -34,3 +34,13 @@ def get_count(cycle):
     qsweeper_result = qsweeper_job.result()
     qsweeper_count = qsweeper_result.get_counts(qsweeper_circuit)
     return sorted(qsweeper_count.keys())
+
+def get_probability(cycle):
+    simulator = QasmSimulator()
+    qsweeper_circuit = quantum_sweeper(cycle)
+    qsweeper_job = simulator.run(qsweeper_circuit, shots = 1000)
+    qsweeper_result = qsweeper_job.result()
+    qsweeper_count = qsweeper_result.get_counts(qsweeper_circuit)
+    return qsweeper_count
+
+print(get_probability(3))
