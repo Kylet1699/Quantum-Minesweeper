@@ -104,14 +104,15 @@ class Minesweeper:
         
         x = seed["coords"]["x"]
         y = seed["coords"]["y"]
-        new_seed = bt.get_count(3 + 2 * revealed_neighbours)[0]
         new_beam_splitters = 3 + 2 * revealed_neighbours
+        new_seed = bt.get_count(new_beam_splitters)[0]
         self.game_seed[x][y]["beam_splitters"] = new_beam_splitters
         self.game_seed[x][y]["bomb_qubit"] = new_seed[0]
         self.game_seed[x][y]["detector_qubit"] = new_seed[1]
 
         # Get probability
-        probability = bt.get_probability(new_beam_splitters)['01' + '0' * (new_beam_splitters - 1)]
+        probability_dist = bt.get_probability(new_beam_splitters)
+        probability = probability_dist['01' + '0' * (new_beam_splitters - 1)] + probability_dist['1' + '0' * (new_beam_splitters)]
 
         print(seed) # show tile info in command line for testing purposes
 
