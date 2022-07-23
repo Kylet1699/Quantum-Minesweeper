@@ -105,17 +105,21 @@ class Minesweeper:
         x = seed["coords"]["x"]
         y = seed["coords"]["y"]
         new_seed = bt.get_count(3 + 2 * revealed_neighbours)[0]
-        self.game_seed[x][y]["beam_splitters"] = 3 + 2 * revealed_neighbours
+        new_beam_splitters = 3 + 2 * revealed_neighbours
+        self.game_seed[x][y]["beam_splitters"] = new_beam_splitters
         self.game_seed[x][y]["bomb_qubit"] = new_seed[0]
         self.game_seed[x][y]["detector_qubit"] = new_seed[1]
+
+        # Get probability
+        probability = bt.get_probability(new_beam_splitters)['01' + '0' * (new_beam_splitters - 1)]
 
         print(seed) # show tile info in command line for testing purposes
 
         self.curr_tile = seed
         if seed["detector_qubit"] == '1':
-            self.labels["prediction"].configure(text = "Quantum bomb tester says there is no bomb")
+            self.labels["prediction"].configure(text = "Quantum bomb tester says there is no bomb (." + str(probability) + ")")
         else:
-            self.labels["prediction"].configure(text = "Quantum bomb tester says there is a bomb")
+            self.labels["prediction"].configure(text = "Quantum bomb tester says there is a bomb (." + str(probability) + ")")
 
     # Update tile after user input
     def updateTile(self, tile, input):
