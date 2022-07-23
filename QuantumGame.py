@@ -35,7 +35,7 @@ class Minesweeper:
                 "yes_btn": Button(self.frame, text = "Yes", command = lambda x = self.curr_tile: self.updateTile(self.curr_tile, 1)),
                 "no_btn": Button(self.frame, text = "No", command = lambda x = self.curr_tile: self.updateTile(self.curr_tile, 0))
             },
-            "score": Label(self.frame, text = "Wrong guesses " + str(self.score))
+            "score": Label(self.frame, text = "Correct guesses " + str(self.score))
         }
 
         # Place UI at the bottom
@@ -49,6 +49,7 @@ class Minesweeper:
     def setup(self):
         # Create list of dictionary objects of the game seed
         self.game_seed = dict({})
+        self.score = 0
 
         # Initialize tile/button for the grid 
         for x in range(SIZE):
@@ -106,10 +107,11 @@ class Minesweeper:
     def updateTile(self, tile, input):
         if input == int(tile["bomb_qubit"]):
             self.labels["prediction"].configure(text = "Congratz, you predicted correctly")
+            self.score += 1
+            self.labels['score'].configure(text = "Correct guesses " + str(self.score))
         else:
             self.labels["prediction"].configure(text = "Oops, you predicted wrong")
-            self.score += 1
-            self.labels['score'].configure(text = "Wrong guesses " + str(self.score))
+            self.restart()
 
         if tile['bomb_qubit'] == '1':
             tile['button'].configure(image = self.images['bomb'])
@@ -118,6 +120,8 @@ class Minesweeper:
             tile['button'].configure(image = self.images['no_bomb'])
             tile['state'] = 1
             self.clearSurroundingTiles(tile["x_y"])
+
+
 
     # Deque surrounding tiles recursively
     def clearSurroundingTiles(self, x_y):
