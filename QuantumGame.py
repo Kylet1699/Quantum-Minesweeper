@@ -135,6 +135,8 @@ class Minesweeper:
             tile['state'] = 1
             self.clearSurroundingTiles(tile["x_y"])
 
+        tile['button'].unbind(BTN_CLICK)
+
         self.checkGameBoard()
 
     def checkGameBoard(self):
@@ -169,6 +171,7 @@ class Minesweeper:
 
         if tile["bomb_qubit"] == '0':
             tile["button"].configure(image = self.images['no_bomb'])
+            tile["button"].unbind(BTN_CLICK)
             tile['state'] = 1
             queue.append(tile["x_y"])
 
