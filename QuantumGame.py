@@ -95,6 +95,20 @@ class Minesweeper:
 
     # Displays bomb detector prediction
     def showPrediction(self, seed):
+        # Check number of revealed neighbours and generate new seed with 3 + (2 * n) beam splitters
+        neighbours = self.getNeighbours(seed["coords"]["x"], seed["coords"]["y"])
+        revealed_neighbours = 0
+        for i in neighbours:
+            if i["state"] == 1:
+                revealed_neighbours += 1
+        
+        x = seed["coords"]["x"]
+        y = seed["coords"]["y"]
+        new_seed = bt.get_count(3 + 2 * revealed_neighbours)[0]
+        self.game_seed[x][y]["beam_splitters"] = 3 + 2 * revealed_neighbours
+        self.game_seed[x][y]["bomb_qubit"] = new_seed[0]
+        self.game_seed[x][y]["detector_qubit"] = new_seed[1]
+
         print(seed) # show tile info in command line for testing purposes
 
         self.curr_tile = seed
