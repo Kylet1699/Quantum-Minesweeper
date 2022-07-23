@@ -121,6 +121,16 @@ class Minesweeper:
             tile['state'] = 1
             self.clearSurroundingTiles(tile["x_y"])
 
+        self.checkGameBoard()
+
+    def checkGameBoard(self):
+        clicked_tile_count = 0
+        for x in range(SIZE):
+            for y in range(SIZE):
+                if self.game_seed[x][y]["state"] == 1:
+                    clicked_tile_count += 1
+        if clicked_tile_count == (SIZE**2):
+            self.restart() 
 
 
     # Deque surrounding tiles recursively
