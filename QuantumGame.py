@@ -37,7 +37,7 @@ class Minesweeper:
                 "yes_btn": Button(self.frame, text = "Yes", command = lambda x = self.curr_tile: self.updateTile(self.curr_tile, 1)),
                 "no_btn": Button(self.frame, text = "No", command = lambda x = self.curr_tile: self.updateTile(self.curr_tile, 0))
             },
-            "score": Label(self.frame, text = "Wrong guesses " + str(self.score))
+            "score": Label(self.frame, text = "Correct guesses " + str(self.score))
         }
 
         # Place UI at the bottom
@@ -51,6 +51,7 @@ class Minesweeper:
     def setup(self,size):
         # Create list of dictionary objects of the game seed
         self.game_seed = dict({})
+        self.score = 0
 
         # Initialize tile/button for the grid 
         for x in range(size):
@@ -96,22 +97,42 @@ class Minesweeper:
 
     # Displays bomb detector prediction
     def showPrediction(self, seed):
+        # Check number of revealed neighbours and generate new seed with 3 + (2 * n) beam splitters
+        neighbours = self.getNeighbours(seed["coords"]["x"], seed["coords"]["y"])
+        revealed_neighbours = 0
+        for i in neighbours:
+            if i["state"] == 1:
+                revealed_neighbours += 1
+        
+        x = seed["coords"]["x"]
+        y = seed["coords"]["y"]
+        new_beam_splitters = 3 + 2 * revealed_neighbours
+        new_seed = bt.get_count(new_beam_splitters)[0]
+        self.game_seed[x][y]["beam_splitters"] = new_beam_splitters
+        self.game_seed[x][y]["bomb_qubit"] = new_seed[0]
+        self.game_seed[x][y]["detector_qubit"] = new_seed[1]
+
+        # Get probability
+        probability_dist = bt.get_probability(new_beam_splitters)
+        probability = probability_dist['01' + '0' * (new_beam_splitters - 1)] + probability_dist['1' + '0' * (new_beam_splitters)]
+
         print(seed) # show tile info in command line for testing purposes
 
         self.curr_tile = seed
         if seed["detector_qubit"] == '1':
-            self.labels["prediction"].configure(text = "Quantum bomb tester says there is no bomb")
+            self.labels["prediction"].configure(text = "Quantum bomb tester says there is no bomb (." + str(probability) + ")")
         else:
-            self.labels["prediction"].configure(text = "Quantum bomb tester says there is a bomb")
+            self.labels["prediction"].configure(text = "Quantum bomb tester says there is a bomb (." + str(probability) + ")")
 
     # Update tile after user input
     def updateTile(self, tile, input):
         if input == int(tile["bomb_qubit"]):
             self.labels["prediction"].configure(text = "Congratz, you predicted correctly")
+            self.score += 1
+            self.labels['score'].configure(text = "Correct guesses " + str(self.score))
         else:
             self.labels["prediction"].configure(text = "Oops, you predicted wrong")
-            self.score += 1
-            self.labels['score'].configure(text = "Wrong guesses " + str(self.score))
+            self.restart()
 
         if tile['bomb_qubit'] == '1':
             tile['button'].configure(image = self.images['bomb'])
@@ -120,6 +141,20 @@ class Minesweeper:
             tile['button'].configure(image = self.images['no_bomb'])
             tile['state'] = 1
             self.clearSurroundingTiles(tile["x_y"])
+
+        tile['button'].unbind(BTN_CLICK)
+
+        self.checkGameBoard()
+
+    def checkGameBoard(self):
+        clicked_tile_count = 0
+        for x in range(SIZE):
+            for y in range(SIZE):
+                if self.game_seed[x][y]["state"] == 1:
+                    clicked_tile_count += 1
+        if clicked_tile_count == (SIZE**2):
+            self.restart() 
+
 
     # Deque surrounding tiles recursively
     def clearSurroundingTiles(self, x_y):
@@ -143,6 +178,7 @@ class Minesweeper:
 
         if tile["bomb_qubit"] == '0':
             tile["button"].configure(image = self.images['no_bomb'])
+            tile["button"].unbind(BTN_CLICK)
             tile['state'] = 1
             queue.append(tile["x_y"])
 
