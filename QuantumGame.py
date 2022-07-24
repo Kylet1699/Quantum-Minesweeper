@@ -148,11 +148,11 @@ class Minesweeper:
 
     def checkGameBoard(self):
         clicked_tile_count = 0
-        for x in range(SIZE):
-            for y in range(SIZE):
+        for x in range(self.size):
+            for y in range(self.size):
                 if self.game_seed[x][y]["state"] == 1:
                     clicked_tile_count += 1
-        if clicked_tile_count == (SIZE**2):
+        if clicked_tile_count == (self.size**2):
             self.restart() 
 
 
