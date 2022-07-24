@@ -7,14 +7,16 @@ from collections import deque
 
 window = None
 
-SIZE = 10
+# SIZE = 10
 
 BTN_CLICK = "<Button-1>"
 
 class Minesweeper:
-    def __init__(self, tk):
+    size = 4
+    def __init__(self, tk, size):
         self.curr_tile = None
         self.score = 0
+        self.size = size
 
         # Images
         self.images = {
@@ -44,15 +46,15 @@ class Minesweeper:
         self.labels["buttons"]["no_btn"].grid(row = 12, column = 6, columnspan = 5)
         self.labels["score"].grid(row = 13, column = 0, columnspan = 10)
         
-        self.restart()
+        self.restart(size)
 
-    def setup(self):
+    def setup(self,size):
         # Create list of dictionary objects of the game seed
         self.game_seed = dict({})
 
         # Initialize tile/button for the grid 
-        for x in range(SIZE):
-            for y in range(SIZE):
+        for x in range(size):
+            for y in range(size):
                 if y == 0:
                     self.game_seed[x] = {}
 
@@ -86,8 +88,8 @@ class Minesweeper:
 
 
     # Restart game
-    def restart(self):
-        self.setup()
+    def restart(self,size):
+        self.setup(size)
     
     def showPredictionWrapper(self, seed):
         return lambda Button: self.showPrediction(seed)
@@ -164,15 +166,16 @@ class Minesweeper:
                 pass
         return neighbours
 
-def main():
-    # Create TK instance
-    window = Tk()
-    # Set program title
-    window.title("Quantum Minesweeper")
-    # create game instance
-    minesweeper = Minesweeper(window)
-    # run event loop
-    window.mainloop()
 
-if __name__ == '__main__':
-    main()
+# def main():
+#     # Create TK instance
+#     window = Tk()
+#     # Set program title
+#     window.title("Quantum Minesweeper")
+#     # create game instance
+#     minesweeper = Minesweeper(window)
+#     # run event loop
+#     window.mainloop()
+
+# if __name__ == '__main__':
+#     main()
