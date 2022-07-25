@@ -12,10 +12,10 @@ SIZE = 10
 BTN_CLICK = "<Button-1>"
 
 class Minesweeper:
-    size = 4
     def __init__(self, tk):
         self.curr_tile = None
         self.score = 0
+        self.size = SIZE
 
         # Images
         self.images = {
