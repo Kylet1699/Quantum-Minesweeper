@@ -7,16 +7,15 @@ from collections import deque
 
 window = None
 
-# SIZE = 10
+SIZE = 10
 
 BTN_CLICK = "<Button-1>"
 
 class Minesweeper:
     size = 4
-    def __init__(self, tk, size):
+    def __init__(self, tk):
         self.curr_tile = None
         self.score = 0
-        self.size = size
 
         # Images
         self.images = {
@@ -41,26 +40,26 @@ class Minesweeper:
         }
 
         # Place UI at the bottom
-        self.labels["prediction"].grid(row = 11, column = 0, columnspan = 10)
-        self.labels["buttons"]["yes_btn"].grid(row = 12, column = 0, columnspan = 5)
-        self.labels["buttons"]["no_btn"].grid(row = 12, column = 6, columnspan = 5)
-        self.labels["score"].grid(row = 13, column = 0, columnspan = 10)
+        self.labels["prediction"].grid(row = 12, column = 0, columnspan = 40)
+        self.labels["buttons"]["yes_btn"].grid(row = 13, column = 0, columnspan = 20)
+        self.labels["buttons"]["no_btn"].grid(row = 13, column = 6, columnspan = 20)
+        self.labels["score"].grid(row = 14, column = 0, columnspan = 40)
         
-        self.restart(size)
+        self.restart()
 
-    def setup(self,size):
+    def setup(self):
         # Create list of dictionary objects of the game seed
         self.game_seed = dict({})
         self.score = 0
 
         # Initialize tile/button for the grid 
-        for x in range(size):
-            for y in range(size):
+        for x in range(SIZE):
+            for y in range(SIZE):
                 if y == 0:
                     self.game_seed[x] = {}
 
                 # Initialize the game with 3 beamsplitters
-                this_seed = bt.get_count(3)[0] # Returns a string of qubits
+                this_seed = bt.get_count(2)[0] # Returns a string of qubits
 
                 x_y = str(x) + "_" + str(y)
                 
@@ -69,7 +68,7 @@ class Minesweeper:
                     "id": this_seed,
                     "bomb_qubit": this_seed[0],
                     "detector_qubit": this_seed[1],
-                    "beam_splitters": 3,
+                    "beam_splitters": 2,
                     "coords": {
                         "x": x,
                         "y": y
@@ -89,8 +88,8 @@ class Minesweeper:
 
 
     # Restart game
-    def restart(self,size):
-        self.setup(size)
+    def restart(self):
+        self.setup()
     
     def showPredictionWrapper(self, seed):
         return lambda Button: self.showPrediction(seed)
@@ -106,11 +105,12 @@ class Minesweeper:
         
         x = seed["coords"]["x"]
         y = seed["coords"]["y"]
-        new_beam_splitters = 3 + 2 * revealed_neighbours
+        new_beam_splitters = 2 + 2 * revealed_neighbours
         new_seed = bt.get_count(new_beam_splitters)[0]
         self.game_seed[x][y]["beam_splitters"] = new_beam_splitters
         self.game_seed[x][y]["bomb_qubit"] = new_seed[0]
         self.game_seed[x][y]["detector_qubit"] = new_seed[1]
+        self.game_seed[x][y]["id"] = new_seed
 
         # Get probability
         probability_dist = bt.get_probability(new_beam_splitters)
@@ -203,15 +203,15 @@ class Minesweeper:
         return neighbours
 
 
-# def main():
-#     # Create TK instance
-#     window = Tk()
-#     # Set program title
-#     window.title("Quantum Minesweeper")
-#     # create game instance
-#     minesweeper = Minesweeper(window)
-#     # run event loop
-#     window.mainloop()
+def main():
+    # Create TK instance
+    window = Tk()
+    # Set program title
+    window.title("Quantum Minesweeper")
+    # create game instance
+    minesweeper = Minesweeper(window)
+    # run event loop
+    window.mainloop()
 
-# if __name__ == '__main__':
-#     main()
+if __name__ == '__main__':
+    main()
